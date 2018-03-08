@@ -24,6 +24,13 @@ function lose() {
     document.getElementById("losses").textContent = "Losses: " + losses;
 }
 
+function win(computerGuessString) {
+    alert("Congrats.  You guessed " + computerGuessString + " correctly!")
+    wins += 1
+    document.getElementById("wins").textContent = "Wins: " + wins
+    document.getElementById("word").innerHTML = ""
+}
+
 
 function startGame() {
     guessesLeft = 14;
@@ -43,20 +50,24 @@ function startGame() {
         
         computerGuessString += computerGuessHidden[i]
     }
+    document.getElementById("word").textContent = ""
     document.getElementById("word").textContent = computerGuessString
 }
 
 startGame()
 
-console.log(typeof computerGuessString)
-
 document.getElementById("word").textContent = computerGuessString
 
+
+// Event listener for keyup
 document.addEventListener("keyup", function(event) {
  
     var userGuess = event.key.toLowerCase()
+   
     var guessedIndex = letterArray.indexOf(userGuess)
+   
     guessedLetterString = ""
+   
     if (guessedIndex > -1) {
 
         guessedLetters.push(letterArray[guessedIndex])
@@ -70,7 +81,24 @@ document.addEventListener("keyup", function(event) {
         //Removing letter 
         letterArray.splice(guessedIndex, 1)
         if (computerGuess.indexOf(userGuess) > -1) {
-            console.log("correct")
+            computerGuessString = ""
+            for (var i = 0; i < computerGuess.length; i += 1) {
+                if (computerGuess[i].indexOf(userGuess) > -1) {
+                    computerGuessHidden.splice(i, 1, userGuess)
+
+                }
+                else {
+
+                }
+                computerGuessString += computerGuessHidden[i]
+            }
+
+
+            document.getElementById("word").textContent = computerGuessString
+            if (computerGuessHidden.indexOf("_") === -1) {
+                win(computerGuessString)
+                startGame()
+            }
         } 
         else {
             guessesLeft -= 1
@@ -81,8 +109,10 @@ document.addEventListener("keyup", function(event) {
             }
         }
     }
-    else {
-        alert("Please select a letter")
+    else if (guessedLetters.indexOf(userGuess) > -1) {
+        alert("You've already guessed that letter.  Select a new one.")
+    } else {
+        alert("That's not a letter!  Select a letter.")
     }
 
 })
