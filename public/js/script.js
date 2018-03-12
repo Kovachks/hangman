@@ -6,7 +6,7 @@ var losses = 0;
 var letterString = "abcdefghijklmnopqrstuvwxyz"
 
 //Split letter selections into letter array
-var letterArray = letterString.split("")
+var letterArray = []
 
 //Array of possible words
 var computerGuessArray = ["obi wan kenobi", "anakin skywalker", "luke skywalker", "boba fett"]
@@ -22,17 +22,27 @@ var guessedLetterString = ""
 function lose() {
     losses += 1
     document.getElementById("losses").textContent = "Losses: " + losses;
+    document.getElementById("result").innerHTML = "Sorry.  You failed to guess " + computerGuessString + " correctly."
 }
 
 function win(computerGuessString) {
-    alert("Congrats.  You guessed " + computerGuessString + " correctly!")
     wins += 1
-    document.getElementById("wins").textContent = "Wins: " + wins
-    document.getElementById("word").innerHTML = ""
+    document.getElementById("wins").textContent = "Wins: " + wins;
+    document.getElementById("word").innerHTML = " ";
+    document.getElementById("result").innerHTML = "Congrats.  You guessed " + computerGuessString + " correctly!"
+
 }
 
 
 function startGame() {
+    console.log("start game")
+    document.getElementById("word").textContent = "This is a test"
+
+    console.log(document.getElementById("word"))
+    console.log("should fire")
+    letterArray = letterString.split("")
+    guessedLetters = []
+    document.getElementById("guessed").textContent = " "
     guessesLeft = 14;
     computerGuessNumber = Math.floor(Math.random() * computerGuessArray.length)
     computerGuess = computerGuessArray[computerGuessNumber].split("")
@@ -50,7 +60,6 @@ function startGame() {
         
         computerGuessString += computerGuessHidden[i]
     }
-    document.getElementById("word").textContent = ""
     document.getElementById("word").textContent = computerGuessString
 }
 
@@ -61,7 +70,8 @@ document.getElementById("word").textContent = computerGuessString
 
 // Event listener for keyup
 document.addEventListener("keyup", function(event) {
- 
+    document.getElementById("result").innerHTML = ""
+    console.log(document.getElementById("word")) 
     var userGuess = event.key.toLowerCase()
    
     var guessedIndex = letterArray.indexOf(userGuess)
@@ -85,18 +95,22 @@ document.addEventListener("keyup", function(event) {
             for (var i = 0; i < computerGuess.length; i += 1) {
                 if (computerGuess[i].indexOf(userGuess) > -1) {
                     computerGuessHidden.splice(i, 1, userGuess)
-
+   
                 }
                 else {
 
                 }
                 computerGuessString += computerGuessHidden[i]
+                
             }
 
 
             document.getElementById("word").textContent = computerGuessString
             if (computerGuessHidden.indexOf("_") === -1) {
+                document.getElementById("word").textContent = ""
+                console.log(document.getElementById("word"))
                 win(computerGuessString)
+                computerGuessString = ""
                 startGame()
             }
         } 
@@ -105,6 +119,7 @@ document.addEventListener("keyup", function(event) {
             document.getElementById("left").textContent = "Guesses Left: " + guessesLeft
             if (guessesLeft === 0) {
                 lose()
+                computerGuessString = ""
                 startGame()
             }
         }
